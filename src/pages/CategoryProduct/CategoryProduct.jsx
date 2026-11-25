@@ -38,7 +38,7 @@ const CategoryProduct = () => {
   }, [categoryId]); // 4. Se vuelve a ejecutar si cambia la categoría
 
   return (
-    <div>
+    <div className={styles.container}>
       <h2>Lista de Productos</h2>
       <div className={styles.grid}>
         {products.map((product) => (

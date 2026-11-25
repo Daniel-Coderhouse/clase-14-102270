@@ -31,12 +31,12 @@ const ProductsList = () => {
   }, []);
 
   return (
-    <div>
+    <div className={styles.container}>
       <h2>Lista de Productos</h2>
 
       <div className={styles.grid}>
         {products.map((product) => (
-          <Link to={`/detail/${product.id}`}>
+          <Link to={`/detail/${product.id}`} style={{ textDecoration: "none" }}>
             <CardProduct key={product.id} data={product} />
           </Link>
         ))}

@@ -8,7 +8,6 @@ const Nav = () => {
       <Link to="/category/buzos">Buzos</Link>
       <Link to="/category/remeras">Remeras</Link>
       <Link to="/category/camperas">Camperas</Link>
-      <Link to="/login">Login</Link>
     </nav>
   );
 };

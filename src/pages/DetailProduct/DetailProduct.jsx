@@ -1,43 +1,50 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router"; // Usa "react-router-dom" si tu versión lo requiere
+import { useParams, Link } from "react-router";
 import { doc, getDoc } from "firebase/firestore";
+import styles from "./styles.module.css";
+
 import { db } from "../../firebase/firebaseConfig";
+import CardProduct from "../../components/CardProduct/CardProduct";
 
 const DetailProduct = () => {
-  // Asegúrate de que el nombre del parámetro coincida con tu ruta (ej. /detail/:id)
   const { id } = useParams();
+
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const getProductById = async () => {
-      try {
-        // 1. Crear la referencia al documento específico usando su ID
-        const docRef = doc(db, "products", id);
+      setLoading(true);
+      setProduct(null);
+      setError("");
 
-        // 2. Obtener el documento
+      try {
+        const docRef = doc(db, "products", id);
         const docSnap = await getDoc(docRef);
 
-        // 3. Verificar si existe y guardar los datos junto con su id
         if (docSnap.exists()) {
-          setProduct({ id: docSnap.id, ...docSnap.data() });
-        } else {
-          console.log("No se encontró el producto");
+          setProduct({
+            ...docSnap.data(),
+            id: docSnap.id,
+          });
         }
       } catch (error) {
-        console.log(error.code, error.message);
+        setError("No se pudo obtener el producto.");
       } finally {
         setLoading(false);
       }
     };
 
-    if (id) {
-      getProductById();
-    }
+    getProductById();
   }, [id]);
 
   if (loading) {
     return <p>Cargando producto...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
   }
 
   if (!product) {
@@ -45,11 +52,12 @@ const DetailProduct = () => {
   }
 
   return (
-    <div>
-      <h2>{product.title}</h2>
-      <p>ID: {product.id}</p>
+    <div className={styles.container}>
+      <h2>Detalle del producto</h2>
+
+      <CardProduct data={product} />
+
       <p>{product.description}</p>
-      <p>Precio: ${product.price}</p>
     </div>
   );
 };
